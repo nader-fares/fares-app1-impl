@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="620.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="baseline.ItemController">
+    <Text layoutX="14.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Item List" wrappingWidth="158.0">
+        <font>
+            <Font size="35.0" />
+        </font>
+    </Text>
+    <Button fx:id="addItemButton" layoutX="446.0" layoutY="86.0" mnemonicParsing="false" onAction="#addItem" prefHeight="25.0" prefWidth="82.0" text="Add Item" />
+    <TextField fx:id="descriptionText" layoutX="14.0" layoutY="86.0" prefHeight="25.0" prefWidth="278.0" promptText="Enter Item Description" />
+    <DatePicker fx:id="dueDate" layoutX="302.0" layoutY="86.0" prefHeight="25.0" prefWidth="132.0" promptText="Due Date" />
+    <ListView fx:id="itemListView" layoutX="14.0" layoutY="122.0" prefHeight="420.0" prefWidth="513.0" />
+    <ButtonBar layoutX="5.0" layoutY="542.0" prefHeight="40.0" prefWidth="513.0">
+        <buttons>
+            <Button fx:id="clearAllButton" mnemonicParsing="false" onAction="#clearAll" prefHeight="25.0" prefWidth="299.0" text="Clear All" />
+            <Button fx:id="deleteItemButton" mnemonicParsing="false" onAction="#deleteItem" prefHeight="25.0" prefWidth="82.0" text="Delete Item" />
+            <Button fx:id="editItemButton" mnemonicParsing="false" onAction="#editItem" prefHeight="25.0" prefWidth="82.0" text="Edit Item" />
+        </buttons>
+    </ButtonBar>
+    <Button fx:id="markItemButton" layoutX="14.0" layoutY="582.0" mnemonicParsing="false" onAction="#markItem" prefHeight="25.0" prefWidth="513.0" text="Mark Item" />
+    <Button fx:id="loadListButton" layoutX="546.0" layoutY="517.0" mnemonicParsing="false" onAction="#loadList" prefHeight="25.0" prefWidth="115.0" text="Load List" />
+    <Button fx:id="saveListButton" layoutX="546.0" layoutY="482.0" mnemonicParsing="false" onAction="#saveList" prefHeight="25.0" prefWidth="115.0" text="Save List" />
+    <ButtonBar layoutX="194.0" layoutY="38.0" prefHeight="40.0" prefWidth="293.0">
+        <buttons>
+            <RadioButton fx:id="showAllButton" minWidth="40.0" mnemonicParsing="false" onAction="#showAllItems" prefHeight="17.0" text="All">
+                <toggleGroup>
+                    <ToggleGroup fx:id="showItems" />
+                </toggleGroup></RadioButton>
+            <RadioButton fx:id="showCompleteButton" mnemonicParsing="false" onAction="#showCompleteItems" prefHeight="17.0" text="Complete" toggleGroup="$showItems" />
+            <RadioButton fx:id="showIncompleteButton" mnemonicParsing="false" onAction="#showIncompleteItems" prefHeight="17.0" prefWidth="122.0" text="Incomplete" toggleGroup="$showItems" />
+        </buttons>
+    </ButtonBar>
+</AnchorPane>
