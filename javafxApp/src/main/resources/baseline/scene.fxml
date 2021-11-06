@@ -33,7 +33,7 @@
     <Button fx:id="saveListButton" layoutX="546.0" layoutY="482.0" mnemonicParsing="false" onAction="#saveList" prefHeight="25.0" prefWidth="115.0" text="Save List" />
     <ButtonBar layoutX="194.0" layoutY="38.0" prefHeight="40.0" prefWidth="293.0">
         <buttons>
-            <RadioButton fx:id="showAllButton" minWidth="40.0" mnemonicParsing="false" onAction="#showAllItems" prefHeight="17.0" text="All">
+            <RadioButton fx:id="showAllButton" minWidth="40.0" mnemonicParsing="false" onAction="#showAllItems" prefHeight="17.0" selected="true" text="All">
                 <toggleGroup>
                     <ToggleGroup fx:id="showItems" />
                 </toggleGroup></RadioButton>
