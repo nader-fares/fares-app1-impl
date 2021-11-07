@@ -27,7 +27,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void clearAll() {
+    void clearItems() {
     }
 
     @Test
@@ -43,23 +43,23 @@ class ItemControllerTest {
     }
 
     @Test
-    void showAllItems() {
+    void showAll() {
     }
 
     @Test
-    void showCompleteItems() {
+    void showComplete() {
     }
 
     @Test
-    void showIncompleteItems() {
+    void showIncomplete() {
     }
 
     @Test
-    void saveList() {
+    void saveItems() {
     }
 
     @Test
-    void loadList() {
+    void loadItems() {
     }
 
     @Test

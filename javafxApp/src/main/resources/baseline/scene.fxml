@@ -14,13 +14,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="pane" prefHeight="620.0" prefWidth="680.0" styleClass="AnchorPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="baseline.ItemController">
+<AnchorPane prefHeight="620.0" prefWidth="680.0" styleClass="AnchorPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="baseline.ItemController">
     <Text layoutX="14.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Item List" wrappingWidth="208.0">
         <font>
             <Font size="53.0" />
         </font>
       <fill>
-         <LinearGradient endX="0.03317535545023697" endY="1.0">
+         <LinearGradient endX="0.03317535545023697">
             <stops>
                <Stop>
                   <color>
@@ -36,18 +36,18 @@
          </LinearGradient>
       </fill>
     </Text>
-    <Button fx:id="addItemButton" layoutX="446.0" layoutY="86.0" mnemonicParsing="false" onAction="#addItem" prefHeight="25.0" prefWidth="82.0" text="Add Item" />
+    <Button fx:id="addItemButton" layoutX="446.0" layoutY="86.0" mnemonicParsing="false" onAction="#addItemToList" prefHeight="25.0" prefWidth="82.0" text="Add Item" />
     <TextField fx:id="descriptionText" layoutX="14.0" layoutY="86.0" prefHeight="25.0" prefWidth="278.0" promptText="Enter Item Description" />
     <DatePicker fx:id="dueDate" layoutX="302.0" layoutY="86.0" prefHeight="25.0" prefWidth="132.0" promptText="Due Date" />
     <ListView fx:id="itemListView" editable="true" layoutX="14.0" layoutY="122.0" prefHeight="420.0" prefWidth="513.0" styleClass="list-view" />
     <ButtonBar layoutX="5.0" layoutY="542.0" prefHeight="40.0" prefWidth="513.0">
         <buttons>
             <Button fx:id="clearAllButton" mnemonicParsing="false" onAction="#clearAll" prefHeight="25.0" prefWidth="299.0" text="Clear All" />
-            <Button fx:id="deleteItemButton" mnemonicParsing="false" onAction="#deleteItem" prefHeight="25.0" prefWidth="82.0" text="Delete Item" />
-            <Button fx:id="editItemButton" mnemonicParsing="false" onAction="#editItem" prefHeight="25.0" prefWidth="82.0" text="Edit Item" />
+            <Button fx:id="deleteItemButton" mnemonicParsing="false" onAction="#deleteItemFromList" prefHeight="25.0" prefWidth="82.0" text="Delete Item" />
+            <Button fx:id="editItemButton" mnemonicParsing="false" onAction="#editItemList" prefHeight="25.0" prefWidth="82.0" text="Edit Item" />
         </buttons>
     </ButtonBar>
-    <Button fx:id="markItemButton" layoutX="14.0" layoutY="582.0" mnemonicParsing="false" onAction="#markItem" prefHeight="25.0" prefWidth="513.0" text="Mark Item" />
+    <Button fx:id="markItemButton" layoutX="14.0" layoutY="582.0" mnemonicParsing="false" onAction="#markItemInList" prefHeight="25.0" prefWidth="513.0" text="Mark Item" />
     <Button fx:id="loadListButton" layoutX="546.0" layoutY="517.0" mnemonicParsing="false" onAction="#loadList" prefHeight="25.0" prefWidth="115.0" text="Load List" />
     <Button fx:id="saveListButton" layoutX="546.0" layoutY="482.0" mnemonicParsing="false" onAction="#saveList" prefHeight="25.0" prefWidth="115.0" text="Save List" />
     <ButtonBar styleClass="radio_bar" layoutX="235.0" layoutY="26.0" prefHeight="40.0" prefWidth="293.0">
@@ -60,5 +60,5 @@
             <RadioButton fx:id="showIncompleteButton" mnemonicParsing="false" onAction="#showIncompleteItems" prefHeight="17.0" prefWidth="122.0" text="Incomplete" toggleGroup="$showItems" />
         </buttons>
     </ButtonBar>
-   <Button styleClass="sort_button" fx:id="sortButton" layoutX="546.0" layoutY="123.0" mnemonicParsing="false" onAction="#sortItems" prefHeight="47.0" prefWidth="115.0" text="Sort" />
+   <Button styleClass="sort_button" fx:id="sortButton" layoutX="546.0" layoutY="123.0" mnemonicParsing="false" onAction="#sortItemsList" prefHeight="47.0" prefWidth="115.0" text="Sort" />
 </AnchorPane>

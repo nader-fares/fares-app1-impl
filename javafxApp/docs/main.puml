@@ -14,6 +14,7 @@ class Item {
 -{static}int count
 -{static}incrementCount()
 -initItemId()
+
 +toString(): String
 +getItemDescription(): String
 +setItemDescription(String itemDescription)
@@ -31,24 +32,39 @@ class ItemController {
 -DatePicker dueDate
 -Button addItemButton
 -Button clearAllButton
-+addItem(ActionEvent actionEvent)
+-addItemToList(ActionEvent actionEvent)
+-clearAll(ActionEvent actionEvent)
+-deleteItemFromList(ActionEvent actionEvent)
+-editItemList(ActionEvent actionEvent)
+-markItemInList(ActionEvent actionEvent)
+-showAllItems(ActionEvent actionEvent)
+-showCompleteItems(ActionEvent actionEvent)
+-showIncompleteItems(ActionEvent actionEvent)
+-saveList(ActionEvent actionEvent)
+-loadList(ActionEvent actionEvent)
+-sortItemsList(ActionEvent actionEvent)
+-disableDatePicker()
+
++addItem()
 +validateDescriptionInput()
 +checkForUnique()
 +throwAlert(String errorType)
 +refresh()
-+clearAll(ActionEvent actionEvent)
-+deleteItem(ActionEvent actionEvent)
-+editItem(ActionEvent actionEvent)
-+markItem(ActionEvent actionEvent)
-+showAllItems(ActionEvent actionEvent)
-+showCompleteItems(ActionEvent actionEvent)
-+showIncompleteItems(ActionEvent actionEvent)
-+saveList(ActionEvent actionEvent)
-+loadList(ActionEvent actionEvent)
-+verifyDate(String currentLine): LocalDate
-+sortItems(ActionEvent actionEvent)
++sortItems()
 +refreshList()
--disableDatePicker(
++clearItems()
++deleteItem(int itemId)
++editItem(int itemId)
++markItem(int itemId)
++showAll()
++showComplete()
++showIncomplete()
++saveItems()
++loadItems()
++verifyDate(String currentLine)
++disableDatePicker()
++verifyDate(String currentLine): LocalDate
++refreshList()
 }
 
 class Error {

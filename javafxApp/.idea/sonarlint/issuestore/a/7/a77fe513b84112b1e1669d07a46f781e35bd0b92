@@ -1,3 +1,0 @@
-
-s
-java:S6206"]Refactor this class declaration to use 'record Error(String headerText, String contentText)'.(Ü„Ãö

@@ -13,9 +13,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.stage.FileChooser;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.net.URL;
 import java.time.DateTimeException;
@@ -24,7 +24,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ItemController implements Initializable {
-
     private final ObservableList<Item> items = FXCollections.observableArrayList();
 
     //displays list of items on gui
@@ -44,19 +43,110 @@ public class ItemController implements Initializable {
 
     @FXML
     private Button clearAllButton;
+
     //adds item to listview
-    public void addItem(ActionEvent actionEvent) {
+    @FXML
+    private void addItemToList(ActionEvent actionEvent) {
 //        button
         try {
             validateDescriptionInput(); //        check if description and date match requirements
             checkForUnique();   //check if item is unique
-            items.add(new Item(descriptionText.getText(), dueDate.getValue())); //create object with description from textfield and date from date picker
-            itemListView.setItems(items);
+            addItem();    //add item to list
         } catch(InputMismatchException e) {
             System.out.println("Input Error");
         } finally {
             refresh();
         }
+    }
+    //delete every item in the listview
+    @FXML
+    private void clearAll(ActionEvent actionEvent) {
+        //button
+        clearItems(); //        deletes every item in the listview
+    }
+
+    //delete selected item in listview
+    @FXML
+    private void deleteItemFromList(ActionEvent actionEvent) {
+//        button
+        //        get selected item index
+        int itemId = itemListView.getSelectionModel().getSelectedItem().getItemId();
+
+        deleteItem(itemId); //delete item
+    }
+
+    //edit selected item in listview
+    @FXML
+    private void editItemList(ActionEvent actionEvent) {
+//        button
+//        when clicking on listview cell show item description in
+//            textfield and
+//            due date in datepicker
+//        track changes in textfield and datepicker and alter the same item
+        int itemId = itemListView.getSelectionModel().getSelectedIndex();   //get the index of the item to be edited
+
+        editItem(itemId);   //edit item
+    }
+
+    //mark selected item in listview as complete/incomplete
+    @FXML
+    private void markItemInList(ActionEvent actionEvent) {
+//        button
+
+        int itemId = itemListView.getSelectionModel().getSelectedIndex();   //        highlight completed item cell box
+
+        markItem(itemId);
+    }
+
+    //display all items in listview
+    @FXML
+    private void showAllItems(ActionEvent actionEvent) {     //default
+
+        //radio button
+        showAll();
+
+    }
+
+    //display all items marked as complete in listview
+    @FXML
+    private void showCompleteItems(ActionEvent actionEvent) {
+        //radio button
+        showComplete();
+    }
+
+    //display all items marked as incomplete in listview
+    @FXML
+    private void showIncompleteItems(ActionEvent actionEvent) {
+        //radio button
+        showIncomplete();
+    }
+
+
+    //save list of items into single txt file
+    @FXML
+    private void saveList(ActionEvent actionEvent) {
+//        button
+        saveItems();
+    }
+
+
+    //load a previously saved list
+    @FXML
+    private void loadList(ActionEvent actionEvent) {
+//        button
+        loadItems();
+    }
+
+    //sorts items based on due date
+    @FXML
+    private void sortItemsList(ActionEvent actionEvent) {
+        sortItems();
+    }
+
+    //add item to list
+    public void addItem() {
+        items.add(new Item(descriptionText.getText(), dueDate.getValue())); //create object with description from textfield and date from date picker
+        itemListView.setItems(items);
     }
 
     //if item does not meet description requirements, throw alert and block item from being added
@@ -70,8 +160,7 @@ public class ItemController implements Initializable {
     public void checkForUnique() {
         //if item with the same description and due date already exists, throw alert and block item from being added
         for (Item item : items) {
-            if (descriptionText.getText().equals(item.getItemDescription()) &&
-            dueDate.getValue().equals(item.getItemDueDate())) {
+            if (descriptionText.getText().equals(item.getItemDescription())) {
                 throwAlert("unique");
             }
         }
@@ -100,69 +189,53 @@ public class ItemController implements Initializable {
         refreshList();
     }
 
-    //delete every item in the listview
-    public void clearAll(ActionEvent actionEvent) {
-        //button
-        if (!items.isEmpty()){
-            items.clear();      //        deletes every item in the listview
-        }
+
+    public void sortItems() {
+        items.sort(Comparator.comparing(Item::getItemDueDate, Comparator.nullsFirst(Comparator.naturalOrder())));
         itemListView.setItems(items);
     }
 
-    //delete selected item in listview
-    public void deleteItem(ActionEvent actionEvent) {
-//        button
-//        get selected item index
-        int itemId = itemListView.getSelectionModel().getSelectedItem().getItemId();
+    public void refreshList() {
+        items.sort(Comparator.comparingInt(Item::getItemId));
+
+        itemListView.setItems(items);
+    }
+
+
+    public void clearItems() {
+        items.clear();
+        itemListView.setItems(items);
+    }
+
+    public void deleteItem(int itemId) {
 //        delete item with the item index
         items.removeIf(item -> item.getItemId() == itemId);
-        items.stream().findAny();
         itemListView.setItems(items);
     }
 
-    //edit selected item in listview
-    public void editItem(ActionEvent actionEvent) {
-//        button
-//        when clicking on listview cell show item description in
-//            textfield and
-//            due date in datepicker
-//        track changes in textfield and datepicker and alter the same item
-
-        int itemId = itemListView.getSelectionModel().getSelectedIndex();
-        if (descriptionText.getText().trim().length() != 0) {
+    public void editItem(int itemId) {
+        if (descriptionText.getText().trim().length() != 0) {   //only change description if textfield is not empty
             items.get(itemId).setItemDescription(descriptionText.getText());
         }
-        if (dueDate.getValue() != null)
+        if (dueDate.getValue() != null)             //only change due date if datepicker is not empty
             items.get(itemId).setItemDueDate(dueDate.getValue());
-        refresh();
-        itemListView.setItems(items);
 
+        refresh();
+
+        itemListView.setItems(items);
     }
 
-    //mark selected item in listview as complete/incomplete
-    public void markItem(ActionEvent actionEvent) {
-        /*
-        button
-        highlight completed item cell box
-         */
-        //store index of selected file
-        int itemId = itemListView.getSelectionModel().getSelectedIndex();
+    public void markItem(int itemId) {
         items.get(itemId).setItemComplete(!items.get(itemId).isItemComplete()); //        check for items complete status and make it the opposite
         itemListView.setItems(items);
     }
 
-    //display all items in listview
-    public void showAllItems(ActionEvent actionEvent) {     //default
-
-        //radio button
-//        set listview equal to original list
-        itemListView.setItems(items);
+    public void showAll() {
+        itemListView.setItems(items);//        set listview equal to original list
     }
 
-    //display all items marked as complete in listview
-    public void showCompleteItems(ActionEvent actionEvent) {
-        //radio button
-//        create new filtered list
+    public void showComplete() {
+        //        create new filtered list
         FilteredList<Item> completeItems = new FilteredList<>(items, Item::isItemComplete);        //filter list to show only items marked as complete
 
         //set listview equal to filtered list
@@ -170,20 +243,16 @@ public class ItemController implements Initializable {
 
     }
 
-    //display all items marked as incomplete in listview
-    public void showIncompleteItems(ActionEvent actionEvent) {
-        //radio button
-//        create new filtered list
+    public void showIncomplete() {
+        //        create new filtered list
         FilteredList<Item> incompleteItems = new FilteredList<>(items, item -> !item.isItemComplete());      //filter list to show only items marked as incomplete
 
         //set listview equal to filtered list
         itemListView.setItems(incompleteItems);
     }
 
-    //save list of items into single txt file
-    public void saveList(ActionEvent actionEvent) {
-//        button
-//        opens filechooser
+    public void saveItems() {
+        //        opens filechooser
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Save file");
         fileChooser.showSaveDialog(null);
@@ -193,7 +262,7 @@ public class ItemController implements Initializable {
 
 //        create text file
         if (selectedFile != null) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(selectedFile+".txt"))) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(selectedFile+".txt"))) { //make file a txt
 
                 for (int i = 0; i < itemListView.getItems().size(); i++) {          //print item list onto newly created text file
                     bufferedWriter.write(itemListView.getItems().get(i) + "\n");
@@ -206,14 +275,15 @@ public class ItemController implements Initializable {
             System.out.println("File not found");
     }
 
-    //load a previously saved list
-    public void loadList(ActionEvent actionEvent) {
-//        button
-//        opens filechooser
-        FileChooser filechooser = new FileChooser();
-        filechooser.setTitle("Load File");
-        File selectedFile = filechooser.showOpenDialog(null);
+    public void loadItems() {
+        //        opens filechooser
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Load File");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
+        fileChooser.setFileFilter(filter);
+        fileChooser.showOpenDialog(null);
 
+        File selectedFile = fileChooser.getSelectedFile();
         if (selectedFile != null) {
 
             //        only allow txt file to be loaded
@@ -281,14 +351,6 @@ public class ItemController implements Initializable {
         disableDatePicker();
     }
 
-    public void sortItems(ActionEvent actionEvent) {
-        items.sort(Comparator.comparing(Item::getItemDueDate, Comparator.nullsFirst(Comparator.naturalOrder())));
-        itemListView.setItems(items);
-    }
 
-    public void refreshList() {
-        items.sort(Comparator.comparingInt(Item::getItemId));
 
-        itemListView.setItems(items);
-    }
 }
