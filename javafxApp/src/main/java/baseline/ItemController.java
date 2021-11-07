@@ -11,6 +11,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
 import javax.swing.*;
@@ -114,21 +116,24 @@ public class ItemController implements Initializable {
         int itemId = itemListView.getSelectionModel().getSelectedItem().getItemId();
 //        delete item with the item index
         items.removeIf(item -> item.getItemId() == itemId);
+        items.stream().findAny();
         itemListView.setItems(items);
     }
 
     //edit selected item in listview
     public void editItem(ActionEvent actionEvent) {
-        /*
-        button
-        when clicking on listview cell show item description in
-            textfield and
-            due date in datepicker
-        track changes in textfield and datepicker and alter the same item
-         */
+//        button
+//        when clicking on listview cell show item description in
+//            textfield and
+//            due date in datepicker
+//        track changes in textfield and datepicker and alter the same item
+
         int itemId = itemListView.getSelectionModel().getSelectedIndex();
-        items.get(itemId).setItemDescription(descriptionText.getText());
-        items.get(itemId).setItemDueDate(dueDate.getValue());
+        if (descriptionText.getText().trim().length() != 0) {
+            items.get(itemId).setItemDescription(descriptionText.getText());
+        }
+        if (dueDate.getValue() != null)
+            items.get(itemId).setItemDueDate(dueDate.getValue());
         refresh();
         itemListView.setItems(items);
 
@@ -147,9 +152,9 @@ public class ItemController implements Initializable {
     }
 
     //display all items in listview
-    public void showAllItems(ActionEvent actionEvent) {
+    public void showAllItems(ActionEvent actionEvent) {     //default
+
         //radio button
-//        default
 //        set listview equal to original list
         itemListView.setItems(items);
     }
@@ -277,8 +282,6 @@ public class ItemController implements Initializable {
     }
 
     public void sortItems(ActionEvent actionEvent) {
-//        items.sort(Comparator.comparing(Item::getItemDueDate));
-//        items.sort(Comparator.naturalOrder());
         items.sort(Comparator.comparing(Item::getItemDueDate, Comparator.nullsFirst(Comparator.naturalOrder())));
         itemListView.setItems(items);
     }

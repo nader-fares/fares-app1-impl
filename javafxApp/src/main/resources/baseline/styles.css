@@ -1,0 +1,49 @@
+.button {
+    -fx-background-color: #0A2043;
+    -fx-background-radius: 10;
+    -fx-opacity: .85;
+    -fx-text-fill: white;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-border-color: black;
+}
+
+.AnchorPane {
+    -fx-background-color: #1A1A1A;
+
+}
+
+.list-view {
+    -fx-background-radius: 20;
+    -fx-background-color: #3D3D3D;
+
+}
+
+.list-cell{
+    -fx-background-radius: 20;
+    -fx-background-color: #3D3D3D;
+    -fx-border-width: 1;
+    -fx-border-color: black;
+    -fx-text-fill: white;
+    -fx-font-size: 24;
+}
+
+.list-cell:focused {
+    -fx-background-color: #030406;
+}
+
+.title {
+    -fx-font-family: "Century Gothic",Verdana,sans-serif;
+    -fx-font-weight: bold;
+}
+
+.radio_bar {
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-border-width: 2;
+    -fx-border-color: black;
+    -fx-background-color: grey;
+}
+.sort_button {
+    -fx-background-radius: 100;
+}

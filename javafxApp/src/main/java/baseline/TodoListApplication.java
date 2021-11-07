@@ -10,6 +10,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class TodoListApplication extends Application {
     public static void main(String[] args) {
         launch(args);
@@ -17,8 +19,9 @@ public class TodoListApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("scene.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("scene.fxml")));
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
 
         stage.setTitle("Todo List");
         stage.setScene(scene);
