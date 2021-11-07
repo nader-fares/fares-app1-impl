@@ -62,13 +62,16 @@ public class Item {
         this.itemId = count;
     }
 
+    public void toggleItemComplete() {
+        this.setItemComplete(!this.isItemComplete());
+    }
     //display object as string in listview
     @Override
     public String toString() {
         String returnString = "";
         if (this.getItemDueDate() != null)  //display date with formatting if it exists
             returnString = this.getItemDueDate() + " | ";
-        returnString += getItemDescription();
+        returnString += getItemDescription() + " " + isItemComplete();
         return returnString;
     }
 }

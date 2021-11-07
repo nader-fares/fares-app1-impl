@@ -26,6 +26,10 @@ import java.util.*;
 public class ItemController implements Initializable {
     private final ObservableList<Item> items = FXCollections.observableArrayList();
 
+    public ObservableList<Item> getItems() {
+        return items;
+    }
+
     //displays list of items on gui
     @FXML
     private ListView<Item> itemListView;
@@ -44,6 +48,8 @@ public class ItemController implements Initializable {
     @FXML
     private Button clearAllButton;
 
+    private String currentView = "all";  //all/complete/incomplete
+
     //adds item to listview
     @FXML
     private void addItemToList(ActionEvent actionEvent) {
@@ -51,7 +57,7 @@ public class ItemController implements Initializable {
         try {
             validateDescriptionInput(); //        check if description and date match requirements
             checkForUnique();   //check if item is unique
-            addItem();    //add item to list
+            addItem(descriptionText.getText(), dueDate.getValue());    //add item to list
         } catch(InputMismatchException e) {
             System.out.println("Input Error");
         } finally {
@@ -79,11 +85,7 @@ public class ItemController implements Initializable {
     @FXML
     private void editItemList(ActionEvent actionEvent) {
 //        button
-//        when clicking on listview cell show item description in
-//            textfield and
-//            due date in datepicker
-//        track changes in textfield and datepicker and alter the same item
-        int itemId = itemListView.getSelectionModel().getSelectedIndex();   //get the index of the item to be edited
+      int itemId = itemListView.getSelectionModel().getSelectedItem().getItemId();   //get the index of the item to be edited
 
         editItem(itemId);   //edit item
     }
@@ -93,9 +95,10 @@ public class ItemController implements Initializable {
     private void markItemInList(ActionEvent actionEvent) {
 //        button
 
-        int itemId = itemListView.getSelectionModel().getSelectedIndex();   //        highlight completed item cell box
+        int itemId = itemListView.getSelectionModel().getSelectedItem().getItemId();   //        highlight completed item cell box
 
         markItem(itemId);
+        refreshList();
     }
 
     //display all items in listview
@@ -144,8 +147,8 @@ public class ItemController implements Initializable {
     }
 
     //add item to list
-    public void addItem() {
-        items.add(new Item(descriptionText.getText(), dueDate.getValue())); //create object with description from textfield and date from date picker
+    public void addItem(String descriptionText, LocalDate dueDate) {
+        items.add(new Item(descriptionText, dueDate)); //create object with description from textfield and date from date picker
         itemListView.setItems(items);
     }
 
@@ -197,10 +200,13 @@ public class ItemController implements Initializable {
 
     public void refreshList() {
         items.sort(Comparator.comparingInt(Item::getItemId));
+        if (currentView.equals("complete")) {
+            showComplete();
+        } else if (currentView.equals("incomplete")) {
+            showIncomplete();
+        } else itemListView.setItems(items);
 
-        itemListView.setItems(items);
     }
-
 
     public void clearItems() {
         items.clear();
@@ -213,24 +219,30 @@ public class ItemController implements Initializable {
         itemListView.setItems(items);
     }
 
+    public Optional<Item> getItemById(int itemId) {
+        return items.stream().filter(item -> item.getItemId() == itemId).findFirst();
+    }
     public void editItem(int itemId) {
-        if (descriptionText.getText().trim().length() != 0) {   //only change description if textfield is not empty
-            items.get(itemId).setItemDescription(descriptionText.getText());
-        }
-        if (dueDate.getValue() != null)             //only change due date if datepicker is not empty
-            items.get(itemId).setItemDueDate(dueDate.getValue());
+        Optional<Item> tempItem = getItemById(itemId);
+        tempItem.ifPresent(item -> {
+            if (descriptionText.getText().trim().length() != 0) {   //only change description if textfield is not empty
+                item.setItemDescription(descriptionText.getText());
+            }
+            if (dueDate.getValue() != null)             //only change due date if datepicker is not empty
+                item.setItemDueDate(dueDate.getValue());
 
-        refresh();
-
-        itemListView.setItems(items);
+            refresh();
+        });
     }
 
     public void markItem(int itemId) {
-        items.get(itemId).setItemComplete(!items.get(itemId).isItemComplete()); //        check for items complete status and make it the opposite
+        Optional<Item> tempItem = items.stream().filter(item -> item.getItemId() == itemId).findFirst();
+        tempItem.ifPresent(Item::toggleItemComplete);
         itemListView.setItems(items);
     }
 
     public void showAll() {
+        currentView = "all";
         itemListView.setItems(items);//        set listview equal to original list
     }
 
@@ -238,6 +250,7 @@ public class ItemController implements Initializable {
         //        create new filtered list
         FilteredList<Item> completeItems = new FilteredList<>(items, Item::isItemComplete);        //filter list to show only items marked as complete
 
+        currentView = "complete";
         //set listview equal to filtered list
         itemListView.setItems(completeItems);
 
@@ -246,6 +259,8 @@ public class ItemController implements Initializable {
     public void showIncomplete() {
         //        create new filtered list
         FilteredList<Item> incompleteItems = new FilteredList<>(items, item -> !item.isItemComplete());      //filter list to show only items marked as incomplete
+
+        currentView = "incomplete";
 
         //set listview equal to filtered list
         itemListView.setItems(incompleteItems);

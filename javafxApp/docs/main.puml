@@ -23,6 +23,7 @@ class Item {
 +isItemComplete(): boolean
 +setItemComplete(boolean itemComplete)
 +getItemId(): int
++toggleItemComplete()
 }
 
 class ItemController {
