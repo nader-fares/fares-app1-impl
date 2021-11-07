@@ -1,3 +1,7 @@
+/*
+ *  UCF COP3330 Fall 2021 Application Assignment 1 Solution
+ *  Copyright 2021 Nader Fares
+ */
 package baseline;
 
 import javafx.collections.FXCollections;
@@ -6,23 +10,20 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.stage.DirectoryChooser;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.URL;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.InputMismatchException;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ItemController implements Initializable {
 
-    private ObservableList<Item> items = FXCollections.observableArrayList();
+    private final ObservableList<Item> items = FXCollections.observableArrayList();
 
     //displays list of items on gui
     @FXML
@@ -36,22 +37,23 @@ public class ItemController implements Initializable {
     @FXML
     private DatePicker dueDate;
 
+    @FXML
+    private Button addItemButton;
+
+    @FXML
+    private Button clearAllButton;
     //adds item to listview
     public void addItem(ActionEvent actionEvent) {
         /*
         button
-        check if description and date match requirements
-        if so
-            create object with
-                description set from the inputted text field and
-                date set from datepicker
-                initialized incomplete
+
         else throw alert
         object added to item list
          */
         try {
-            validateDescriptionInput();
-            items.add(new Item(descriptionText.getText(), dueDate.getValue()));
+            validateDescriptionInput(); //        check if description and date match requirements
+            checkForUnique();   //check if item is unique
+            items.add(new Item(descriptionText.getText(), dueDate.getValue())); //create object with description from textfield and date from date picker
             itemListView.setItems(items);
         } catch(InputMismatchException e) {
             System.out.println("Input Error");
@@ -60,40 +62,52 @@ public class ItemController implements Initializable {
         }
     }
 
+    //if item does not meet description requirements, throw alert and block item from being added
     public void validateDescriptionInput() {
         String trimmedInput = descriptionText.getText().trim();
-        String formattedDate = dueDate.getValue().toString().trim();
-        System.out.println(formattedDate);
-        if (dueDate.getValue() != null) {
-        }
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        String string = "\\d{4}/[01]\\d/[0-3]\\d";
-        if (trimmedInput.length() < 1 || trimmedInput.length() > 256 || dueDate.getValue() == null || !dueDate.getValue().toString().matches("^((19|20)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$")) {
-            throwAlert();
+        if (trimmedInput.length() < 1 || trimmedInput.length() > 256) {
+            throwAlert("description");
         }
     }
 
-    public void throwAlert() {
+    public void checkForUnique() {
+        //if item with the same description and due date already exists, throw alert and block item from being added
+        for (Item item : items) {
+            if (descriptionText.getText().equals(item.getItemDescription()) &&
+            dueDate.getValue().equals(item.getItemDueDate())) {
+                throwAlert("unique");
+            }
+        }
+    }
+
+    public void throwAlert(String errorType) {
+        //map of errors object, each different error has a different key
+        Map<String, Error> errors = new HashMap<>();
+        errors.put("description", new Error("Invalid Input!", "Description must be between 1 and 256 characters in length."));
+        errors.put("file", new Error("Invalid File!", "Must be a .txt file."));
+        errors.put("unique", new Error("Invalid Item!", "Item already exists in list."));
+
+        //depending on key, error will display different message
+        Error error = errors.get(errorType);
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setHeaderText("Invalid Input!");
-        errorAlert.setContentText("Description must be between 1 and 256 characters in length.");
+        errorAlert.setHeaderText(error.getHeaderText());
+        errorAlert.setContentText(error.getContentText());
         errorAlert.showAndWait();
         throw new InputMismatchException();
     }
 
     public void refresh() {
+        //refresh text fields after every addition
         descriptionText.setText("");
         dueDate.setValue(null);
+        refreshList();
     }
 
     //delete every item in the listview
     public void clearAll(ActionEvent actionEvent) {
-        /*
-        button
-        deletes every item in the listview
-         */
+        //button
         if (!items.isEmpty()){
-            items.clear();
+            items.clear();      //        deletes every item in the listview
         }
         itemListView.setItems(items);
     }
@@ -117,29 +131,31 @@ public class ItemController implements Initializable {
             due date in datepicker
         track changes in textfield and datepicker and alter the same item
          */
+        int itemId = itemListView.getSelectionModel().getSelectedIndex();
+        items.get(itemId).setItemDescription(descriptionText.getText());
+        items.get(itemId).setItemDueDate(dueDate.getValue());
+        refresh();
+        itemListView.setItems(items);
+
     }
 
     //mark selected item in listview as complete/incomplete
     public void markItem(ActionEvent actionEvent) {
         /*
         button
-        check for items complete status
-            if true -> change to false
-            if false -> change to true
         highlight completed item cell box
          */
+        //store index of selected file
         int itemId = itemListView.getSelectionModel().getSelectedIndex();
-        items.get(itemId).setItemComplete(!items.get(itemId).isItemComplete());
+        items.get(itemId).setItemComplete(!items.get(itemId).isItemComplete()); //        check for items complete status and make it the opposite
         itemListView.setItems(items);
     }
 
     //display all items in listview
     public void showAllItems(ActionEvent actionEvent) {
         //radio button
-        /*
-        default
-        set listview equal to original list
-         */
+//        default
+//        set listview equal to original list
         itemListView.setItems(items);
     }
 
@@ -166,25 +182,23 @@ public class ItemController implements Initializable {
 
     //save list of items into single txt file
     public void saveList(ActionEvent actionEvent) {
-        /*
-        button
-        opens filechooser
-        user chooses file
-            save location
-            name
-        create text file
-        print item list onto newly created text file
-         */
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Save File");
-        File selectedFile = directoryChooser.showDialog(null);
+//        button
+//        opens filechooser
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save file");
+        fileChooser.showSaveDialog(null);
+
+//        user chooses file
+        File selectedFile = fileChooser.getSelectedFile();      //save location and name
+
+//        create text file
         if (selectedFile != null) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(selectedFile + "/output.txt"))) {
-                for (int i = 0; i < itemListView.getItems().size(); i++) {
-                    bufferedWriter.write(itemListView.getItems().get(i).getItemDescription() + "\n");
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(selectedFile+".txt"))) {
+
+                for (int i = 0; i < itemListView.getItems().size(); i++) {          //print item list onto newly created text file
+                    bufferedWriter.write(itemListView.getItems().get(i) + "\n");
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -194,37 +208,93 @@ public class ItemController implements Initializable {
 
     //load a previously saved list
     public void loadList(ActionEvent actionEvent) {
-        /*
-        button
-        opens filechooser
-        only allow txt file to be loaded
-            throw error alert if not
-        clear original list
-        read line by line and create item object for each line
-        add each item to list
-         */
+//        button
+//        opens filechooser
         FileChooser filechooser = new FileChooser();
         filechooser.setTitle("Load File");
         File selectedFile = filechooser.showOpenDialog(null);
+
         if (selectedFile != null) {
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(selectedFile))) {
-                String currentLine = bufferedReader.readLine();
-                while (currentLine != null) {
-                    System.out.println(currentLine);
-                    descriptionText.setText(currentLine);
-                    currentLine = bufferedReader.readLine();
+
+            //        only allow txt file to be loaded
+            if (!selectedFile.getName().endsWith(".txt")) {
+                throwAlert("file");     //            throw error alert if not
+                return;
+            }
+
+            clearAllButton.fire();      //        clear original list
+
+            try {
+                try (Scanner reader = new Scanner(selectedFile)) {
+
+                    while (reader.hasNext()) {
+                        //read word by word
+                        String currentLine = reader.next().trim();
+
+                        //variable to store description
+                        String itemDescription;
+
+                        //variable to store date
+                        LocalDate date;
+                        date = verifyDate(currentLine);
+
+                        //if line contains date display it
+                        if (date != null) {
+                            dueDate.setValue(date);
+                            currentLine = reader.nextLine();    //first word
+                        } else {
+                            dueDate.setValue(null);
+                            currentLine += reader.nextLine();
+                        }
+
+                        itemDescription = currentLine.replace("|", "").trim();
+                        descriptionText.setText(itemDescription);
+                        addItemButton.fire();           //create item object for each line
+                    }
                 }
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        } else
-            System.out.println("File not found");
+        }
+//        add each item to list
+
+
+
+    }
+
+    //verifies date follows format
+    public LocalDate verifyDate(String currentLine) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            return LocalDate.parse(currentLine, dateFormat);    //date will be returned if date format matches pattern
+        } catch (DateTimeException e) {
+            return null;
+        }
+    }
+
+    //blocks user from typing in datepicker textfield
+    public void disableDatePicker() {
+        dueDate.getEditor().setDisable(true);
+        dueDate.getEditor().setOpacity(1);          //so that textfield is not greyed out when clicking it
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        itemListView.setItems(null);
+        itemListView.setItems(null);    //initialize list
+        disableDatePicker();
+    }
+
+    public void sortItems(ActionEvent actionEvent) {
+//        items.sort(Comparator.comparing(Item::getItemDueDate));
+//        items.sort(Comparator.naturalOrder());
+        items.sort(Comparator.comparing(Item::getItemDueDate, Comparator.nullsFirst(Comparator.naturalOrder())));
+        itemListView.setItems(items);
+    }
+
+    public void refreshList() {
+        items.sort(Comparator.comparingInt(Item::getItemId));
+        
+        itemListView.setItems(items);
     }
 }

@@ -20,7 +20,7 @@
     <Button fx:id="addItemButton" layoutX="446.0" layoutY="86.0" mnemonicParsing="false" onAction="#addItem" prefHeight="25.0" prefWidth="82.0" text="Add Item" />
     <TextField fx:id="descriptionText" layoutX="14.0" layoutY="86.0" prefHeight="25.0" prefWidth="278.0" promptText="Enter Item Description" />
     <DatePicker fx:id="dueDate" layoutX="302.0" layoutY="86.0" prefHeight="25.0" prefWidth="132.0" promptText="Due Date" />
-    <ListView fx:id="itemListView" layoutX="14.0" layoutY="122.0" prefHeight="420.0" prefWidth="513.0" />
+    <ListView fx:id="itemListView" editable="true" layoutX="14.0" layoutY="122.0" prefHeight="420.0" prefWidth="513.0" />
     <ButtonBar layoutX="5.0" layoutY="542.0" prefHeight="40.0" prefWidth="513.0">
         <buttons>
             <Button fx:id="clearAllButton" mnemonicParsing="false" onAction="#clearAll" prefHeight="25.0" prefWidth="299.0" text="Clear All" />
@@ -41,4 +41,5 @@
             <RadioButton fx:id="showIncompleteButton" mnemonicParsing="false" onAction="#showIncompleteItems" prefHeight="17.0" prefWidth="122.0" text="Incomplete" toggleGroup="$showItems" />
         </buttons>
     </ButtonBar>
+   <Button fx:id="sortButton" layoutX="546.0" layoutY="165.0" mnemonicParsing="false" onAction="#sortItems" text="Sort" />
 </AnchorPane>
