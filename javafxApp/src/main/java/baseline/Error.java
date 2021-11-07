@@ -5,8 +5,8 @@
 package baseline;
 
 public class Error {
-    private String headerText;      //header text for error code
-    private String contentText;     //content text for error code
+    private final String headerText;      //header text for error code
+    private final String contentText;     //content text for error code
 
     public Error(String headerText, String contentText) {
         this.headerText = headerText;
@@ -17,15 +17,9 @@ public class Error {
         return headerText;
     }
 
-    public void setHeaderText(String headerText) {
-        this.headerText = headerText;
-    }
 
     public String getContentText() {
         return contentText;
     }
 
-    public void setContentText(String contentText) {
-        this.contentText = contentText;
-    }
 }

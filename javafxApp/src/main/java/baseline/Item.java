@@ -46,18 +46,18 @@ public class Item {
         this.itemDescription = itemDescription;
         this.itemDueDate = itemDueDate;
         this.itemComplete = false;  //                initialized incomplete
-        this.initItemId();
+        this.initItemId();      //initialized id
     }
 
     public int getItemId() {
         return itemId;
     }
 
-    public static void incrementCount() {
+    private static void incrementCount() {
         count++;
-    }
+    }   //increment count variable
 
-    public void initItemId() {
+    private void initItemId() {
         incrementCount();
         this.itemId = count;
     }

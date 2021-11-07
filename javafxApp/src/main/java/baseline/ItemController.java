@@ -44,12 +44,7 @@ public class ItemController implements Initializable {
     private Button clearAllButton;
     //adds item to listview
     public void addItem(ActionEvent actionEvent) {
-        /*
-        button
-
-        else throw alert
-        object added to item list
-         */
+//        button
         try {
             validateDescriptionInput(); //        check if description and date match requirements
             checkForUnique();   //check if item is unique
@@ -257,10 +252,6 @@ public class ItemController implements Initializable {
                 e.printStackTrace();
             }
         }
-//        add each item to list
-
-
-
     }
 
     //verifies date follows format
@@ -274,7 +265,7 @@ public class ItemController implements Initializable {
     }
 
     //blocks user from typing in datepicker textfield
-    public void disableDatePicker() {
+    private void disableDatePicker() {
         dueDate.getEditor().setDisable(true);
         dueDate.getEditor().setOpacity(1);          //so that textfield is not greyed out when clicking it
     }
@@ -294,7 +285,7 @@ public class ItemController implements Initializable {
 
     public void refreshList() {
         items.sort(Comparator.comparingInt(Item::getItemId));
-        
+
         itemListView.setItems(items);
     }
 }

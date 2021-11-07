@@ -41,5 +41,5 @@
             <RadioButton fx:id="showIncompleteButton" mnemonicParsing="false" onAction="#showIncompleteItems" prefHeight="17.0" prefWidth="122.0" text="Incomplete" toggleGroup="$showItems" />
         </buttons>
     </ButtonBar>
-   <Button fx:id="sortButton" layoutX="546.0" layoutY="165.0" mnemonicParsing="false" onAction="#sortItems" text="Sort" />
+   <Button fx:id="sortButton" layoutX="546.0" layoutY="123.0" mnemonicParsing="false" onAction="#sortItems" prefHeight="47.0" prefWidth="115.0" text="Sort" />
 </AnchorPane>

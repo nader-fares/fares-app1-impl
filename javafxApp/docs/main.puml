@@ -1,0 +1,69 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+class TodoListApplication {
++main(String[] args)
++start(Stage stage)
+}
+
+class Item {
+-String itemDescription
+-LocalDate itemDueDate
+-boolean itemComplete
+-int itemId
+-{static}int count
+-{static}incrementCount()
+-initItemId()
++toString(): String
++getItemDescription(): String
++setItemDescription(String itemDescription)
++getItemDueDate(): LocalDate
++setItemDueDate(LocalDate itemDueDate)
++isItemComplete(): boolean
++setItemComplete(boolean itemComplete)
++getItemId(): int
+}
+
+class ItemController {
+-{final}ObservableList<Item> items
+-ListView<Item> itemListView
+-TextField descriptionText
+-DatePicker dueDate
+-Button addItemButton
+-Button clearAllButton
++addItem(ActionEvent actionEvent)
++validateDescriptionInput()
++checkForUnique()
++throwAlert(String errorType)
++refresh()
++clearAll(ActionEvent actionEvent)
++deleteItem(ActionEvent actionEvent)
++editItem(ActionEvent actionEvent)
++markItem(ActionEvent actionEvent)
++showAllItems(ActionEvent actionEvent)
++showCompleteItems(ActionEvent actionEvent)
++showIncompleteItems(ActionEvent actionEvent)
++saveList(ActionEvent actionEvent)
++loadList(ActionEvent actionEvent)
++verifyDate(String currentLine): LocalDate
++sortItems(ActionEvent actionEvent)
++refreshList()
+-disableDatePicker(
+}
+
+class Error {
+-String headerText
+-String contextText
++getHeaderText(): String
++getContentText(): String
+}
+
+file scene.fxml {
+}
+
+scene.fxml o-- ItemController
+TodoListApplication o-- scene.fxml
+ItemController o-- Item
+ItemController o-- Error
+
+@enduml
