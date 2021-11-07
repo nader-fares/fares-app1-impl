@@ -28,11 +28,18 @@ class Item {
 
 class ItemController {
 -{final}ObservableList<Item> items
+-String currentView
+
 -ListView<Item> itemListView
 -TextField descriptionText
 -DatePicker dueDate
+
 -Button addItemButton
 -Button clearAllButton
+
++getItems(): ObservableList<Item>
++getCurrentView(): String
+
 -addItemToList(ActionEvent actionEvent)
 -clearAll(ActionEvent actionEvent)
 -deleteItemFromList(ActionEvent actionEvent)
@@ -44,28 +51,30 @@ class ItemController {
 -saveList(ActionEvent actionEvent)
 -loadList(ActionEvent actionEvent)
 -sortItemsList(ActionEvent actionEvent)
--disableDatePicker()
 
 +addItem()
 +validateDescriptionInput()
 +checkForUnique()
 +throwAlert(String errorType)
 +refresh()
-+sortItems()
 +refreshList()
++sortItems()
 +clearItems()
 +deleteItem(int itemId)
 +editItem(int itemId)
 +markItem(int itemId)
++getItemById(int itemId): Optional<Item>
 +showAll()
 +showComplete()
 +showIncomplete()
 +saveItems()
++writeItems(File selectedFile)
 +loadItems()
 +verifyDate(String currentLine)
-+disableDatePicker()
 +verifyDate(String currentLine): LocalDate
-+refreshList()
+
+-disableDatePicker()
++Initialize(URL location, ResourceBundle resources)
 }
 
 class Error {

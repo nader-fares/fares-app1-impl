@@ -50,13 +50,17 @@ public class ItemController implements Initializable {
 
     private String currentView = "all";  //all/complete/incomplete
 
+    public String getCurrentView() {
+        return currentView;
+    }
+
     //adds item to listview
     @FXML
     private void addItemToList(ActionEvent actionEvent) {
 //        button
         try {
-            validateDescriptionInput(); //        check if description and date match requirements
-            checkForUnique();   //check if item is unique
+            validateDescriptionInput(descriptionText.getText()); //        check if description and date match requirements
+            checkForUnique(descriptionText.getText());   //check if item is unique
             addItem(descriptionText.getText(), dueDate.getValue());    //add item to list
         } catch(InputMismatchException e) {
             System.out.println("Input Error");
@@ -87,7 +91,7 @@ public class ItemController implements Initializable {
 //        button
       int itemId = itemListView.getSelectionModel().getSelectedItem().getItemId();   //get the index of the item to be edited
 
-        editItem(itemId);   //edit item
+        editItem(itemId, descriptionText.getText(), dueDate.getValue());   //edit item
     }
 
     //mark selected item in listview as complete/incomplete
@@ -98,7 +102,7 @@ public class ItemController implements Initializable {
         int itemId = itemListView.getSelectionModel().getSelectedItem().getItemId();   //        highlight completed item cell box
 
         markItem(itemId);
-        refreshList();
+        refreshList(currentView);
     }
 
     //display all items in listview
@@ -153,17 +157,17 @@ public class ItemController implements Initializable {
     }
 
     //if item does not meet description requirements, throw alert and block item from being added
-    public void validateDescriptionInput() {
-        String trimmedInput = descriptionText.getText().trim();
+    public void validateDescriptionInput(String descriptionText) {
+        String trimmedInput = descriptionText.trim();
         if (trimmedInput.length() < 1 || trimmedInput.length() > 256) {
             throwAlert("description");
         }
     }
 
-    public void checkForUnique() {
+    public void checkForUnique(String descriptionText) {
         //if item with the same description and due date already exists, throw alert and block item from being added
         for (Item item : items) {
-            if (descriptionText.getText().equals(item.getItemDescription())) {
+            if (descriptionText.equals(item.getItemDescription())) {
                 throwAlert("unique");
             }
         }
@@ -189,7 +193,7 @@ public class ItemController implements Initializable {
         //refresh text fields after every addition
         descriptionText.setText("");
         dueDate.setValue(null);
-        refreshList();
+        refreshList(currentView);
     }
 
 
@@ -198,7 +202,7 @@ public class ItemController implements Initializable {
         itemListView.setItems(items);
     }
 
-    public void refreshList() {
+    public void refreshList(String currentView) {
         items.sort(Comparator.comparingInt(Item::getItemId));
         if (currentView.equals("complete")) {
             showComplete();
@@ -222,21 +226,22 @@ public class ItemController implements Initializable {
     public Optional<Item> getItemById(int itemId) {
         return items.stream().filter(item -> item.getItemId() == itemId).findFirst();
     }
-    public void editItem(int itemId) {
+
+    public void editItem(int itemId, String descriptionText, LocalDate dueDate) {
         Optional<Item> tempItem = getItemById(itemId);
         tempItem.ifPresent(item -> {
-            if (descriptionText.getText().trim().length() != 0) {   //only change description if textfield is not empty
-                item.setItemDescription(descriptionText.getText());
+            if (descriptionText.trim().length() != 0) {   //only change description if textfield is not empty
+                item.setItemDescription(descriptionText);
             }
-            if (dueDate.getValue() != null)             //only change due date if datepicker is not empty
-                item.setItemDueDate(dueDate.getValue());
+            if (dueDate != null)             //only change due date if datepicker is not empty
+                item.setItemDueDate(dueDate);
 
             refresh();
         });
     }
 
     public void markItem(int itemId) {
-        Optional<Item> tempItem = items.stream().filter(item -> item.getItemId() == itemId).findFirst();
+        Optional<Item> tempItem = getItemById(itemId);
         tempItem.ifPresent(Item::toggleItemComplete);
         itemListView.setItems(items);
     }
@@ -251,6 +256,7 @@ public class ItemController implements Initializable {
         FilteredList<Item> completeItems = new FilteredList<>(items, Item::isItemComplete);        //filter list to show only items marked as complete
 
         currentView = "complete";
+
         //set listview equal to filtered list
         itemListView.setItems(completeItems);
 
@@ -277,19 +283,22 @@ public class ItemController implements Initializable {
 
 //        create text file
         if (selectedFile != null) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(selectedFile+".txt"))) { //make file a txt
-
-                for (int i = 0; i < itemListView.getItems().size(); i++) {          //print item list onto newly created text file
-                    bufferedWriter.write(itemListView.getItems().get(i) + "\n");
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            writeItems(selectedFile);
         } else
             System.out.println("File not found");
     }
 
+    public void writeItems(File selectedFile) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(selectedFile+".txt"))) { //make file a txt
+
+            for (int i = 0; i < itemListView.getItems().size(); i++) {          //print item list onto newly created text file
+                bufferedWriter.write(itemListView.getItems().get(i) + "\n");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public void loadItems() {
         //        opens filechooser
         JFileChooser fileChooser = new JFileChooser();
