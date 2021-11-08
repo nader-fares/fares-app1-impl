@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="620.0" prefWidth="680.0" styleClass="AnchorPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="baseline.ItemController">
-    <Text layoutX="14.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Item List" wrappingWidth="208.0">
+    <Text layoutX="14.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Todo List" wrappingWidth="239.0">
         <font>
             <Font size="53.0" />
         </font>
@@ -50,15 +50,24 @@
     <Button fx:id="markItemButton" layoutX="14.0" layoutY="582.0" mnemonicParsing="false" onAction="#markItemInList" prefHeight="25.0" prefWidth="513.0" text="Mark Item" />
     <Button fx:id="loadListButton" layoutX="546.0" layoutY="517.0" mnemonicParsing="false" onAction="#loadList" prefHeight="25.0" prefWidth="115.0" text="Load List" />
     <Button fx:id="saveListButton" layoutX="546.0" layoutY="482.0" mnemonicParsing="false" onAction="#saveList" prefHeight="25.0" prefWidth="115.0" text="Save List" />
-    <ButtonBar styleClass="radio_bar" layoutX="235.0" layoutY="26.0" prefHeight="40.0" prefWidth="293.0">
+    <ButtonBar layoutX="328.0" layoutY="23.0" prefHeight="40.0" prefWidth="318.0" styleClass="radio_bar">
         <buttons>
             <RadioButton fx:id="showAllButton" minWidth="40.0" mnemonicParsing="false" onAction="#showAllItems" prefHeight="17.0" selected="true" text="All">
                 <toggleGroup>
                     <ToggleGroup fx:id="showItems" />
-                </toggleGroup></RadioButton>
-            <RadioButton fx:id="showCompleteButton" mnemonicParsing="false" onAction="#showCompleteItems" prefHeight="17.0" text="Complete" toggleGroup="$showItems" />
-            <RadioButton fx:id="showIncompleteButton" mnemonicParsing="false" onAction="#showIncompleteItems" prefHeight="17.0" prefWidth="122.0" text="Incomplete" toggleGroup="$showItems" />
+                </toggleGroup>
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font></RadioButton>
+            <RadioButton fx:id="showCompleteButton" mnemonicParsing="false" onAction="#showCompleteItems" prefHeight="17.0" text="Complete" toggleGroup="$showItems">
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font></RadioButton>
+            <RadioButton fx:id="showIncompleteButton" mnemonicParsing="false" onAction="#showIncompleteItems" prefHeight="17.0" prefWidth="122.0" text="Incomplete" toggleGroup="$showItems">
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font></RadioButton>
         </buttons>
     </ButtonBar>
-   <Button styleClass="sort_button" fx:id="sortButton" layoutX="546.0" layoutY="123.0" mnemonicParsing="false" onAction="#sortItemsList" prefHeight="47.0" prefWidth="115.0" text="Sort" />
+   <Button fx:id="sortButton" layoutX="546.0" layoutY="123.0" mnemonicParsing="false" onAction="#sortItemsList" prefHeight="47.0" prefWidth="115.0" styleClass="sort_button" text="Sort" />
 </AnchorPane>

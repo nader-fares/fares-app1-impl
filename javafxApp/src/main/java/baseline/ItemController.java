@@ -4,8 +4,6 @@
  */
 package baseline;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,11 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ItemController implements Initializable {
-    private final ObservableList<Item> items = FXCollections.observableArrayList();
-
-    public ObservableList<Item> getItems() {
-        return items;
-    }
+    ItemControllerMethods items = new ItemControllerMethods();
 
     //displays list of items on gui
     @FXML
@@ -50,66 +44,56 @@ public class ItemController implements Initializable {
 
     private String currentView = "all";  //all/complete/incomplete
 
-    public String getCurrentView() {
-        return currentView;
-    }
-
     //adds item to listview
     @FXML
     private void addItemToList(ActionEvent actionEvent) {
-//        button
         try {
-            validateDescriptionInput(descriptionText.getText()); //        check if description and date match requirements
-            checkForUnique(descriptionText.getText());   //check if item is unique
-            addItem(descriptionText.getText(), dueDate.getValue());    //add item to list
+            items.addItem(descriptionText.getText(), dueDate.getValue());
         } catch(InputMismatchException e) {
             System.out.println("Input Error");
         } finally {
             refresh();
         }
     }
+
     //delete every item in the listview
     @FXML
     private void clearAll(ActionEvent actionEvent) {
-        //button
-        clearItems(); //        deletes every item in the listview
+        items.clearItems();
+        refresh();
     }
 
     //delete selected item in listview
     @FXML
     private void deleteItemFromList(ActionEvent actionEvent) {
-//        button
-        //        get selected item index
-        int itemId = itemListView.getSelectionModel().getSelectedItem().getItemId();
+        int itemId = itemListView.getSelectionModel().getSelectedItem().getItemId();        //get selected item index
 
-        deleteItem(itemId); //delete item
+        items.deleteItem(itemId); //delete item with index
+        refresh();
     }
 
     //edit selected item in listview
     @FXML
     private void editItemList(ActionEvent actionEvent) {
-//        button
       int itemId = itemListView.getSelectionModel().getSelectedItem().getItemId();   //get the index of the item to be edited
 
-        editItem(itemId, descriptionText.getText(), dueDate.getValue());   //edit item
+        items.editItem(itemId, descriptionText.getText(), dueDate.getValue());   //edit item
+        refresh();
     }
 
     //mark selected item in listview as complete/incomplete
     @FXML
     private void markItemInList(ActionEvent actionEvent) {
-//        button
-
         int itemId = itemListView.getSelectionModel().getSelectedItem().getItemId();   //        highlight completed item cell box
 
-        markItem(itemId);
-        refreshList(currentView);
+        items.markItem(itemId);
+
+        refresh();
     }
 
     //display all items in listview
     @FXML
     private void showAllItems(ActionEvent actionEvent) {     //default
-
-        //radio button
         showAll();
 
     }
@@ -117,14 +101,12 @@ public class ItemController implements Initializable {
     //display all items marked as complete in listview
     @FXML
     private void showCompleteItems(ActionEvent actionEvent) {
-        //radio button
         showComplete();
     }
 
     //display all items marked as incomplete in listview
     @FXML
     private void showIncompleteItems(ActionEvent actionEvent) {
-        //radio button
         showIncomplete();
     }
 
@@ -132,7 +114,6 @@ public class ItemController implements Initializable {
     //save list of items into single txt file
     @FXML
     private void saveList(ActionEvent actionEvent) {
-//        button
         saveItems();
     }
 
@@ -140,7 +121,6 @@ public class ItemController implements Initializable {
     //load a previously saved list
     @FXML
     private void loadList(ActionEvent actionEvent) {
-//        button
         loadItems();
     }
 
@@ -150,45 +130,6 @@ public class ItemController implements Initializable {
         sortItems();
     }
 
-    //add item to list
-    public void addItem(String descriptionText, LocalDate dueDate) {
-        items.add(new Item(descriptionText, dueDate)); //create object with description from textfield and date from date picker
-        itemListView.setItems(items);
-    }
-
-    //if item does not meet description requirements, throw alert and block item from being added
-    public void validateDescriptionInput(String descriptionText) {
-        String trimmedInput = descriptionText.trim();
-        if (trimmedInput.length() < 1 || trimmedInput.length() > 256) {
-            throwAlert("description");
-        }
-    }
-
-    public void checkForUnique(String descriptionText) {
-        //if item with the same description and due date already exists, throw alert and block item from being added
-        for (Item item : items) {
-            if (descriptionText.equals(item.getItemDescription())) {
-                throwAlert("unique");
-            }
-        }
-    }
-
-    public void throwAlert(String errorType) {
-        //map of errors object, each different error has a different key
-        Map<String, Error> errors = new HashMap<>();
-        errors.put("description", new Error("Invalid Input!", "Description must be between 1 and 256 characters in length."));
-        errors.put("file", new Error("Invalid File!", "Must be a .txt file."));
-        errors.put("unique", new Error("Invalid Item!", "Item already exists in list."));
-
-        //depending on key, error will display different message
-        Error error = errors.get(errorType);
-        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-        errorAlert.setHeaderText(error.getHeaderText());
-        errorAlert.setContentText(error.getContentText());
-        errorAlert.showAndWait();
-        throw new InputMismatchException();
-    }
-
     public void refresh() {
         //refresh text fields after every addition
         descriptionText.setText("");
@@ -196,75 +137,38 @@ public class ItemController implements Initializable {
         refreshList(currentView);
     }
 
-
     public void sortItems() {
-        items.sort(Comparator.comparing(Item::getItemDueDate, Comparator.nullsFirst(Comparator.naturalOrder())));
-        itemListView.setItems(items);
+        items.getItems().sort(Comparator.comparing(Item::getItemDueDate, Comparator.nullsFirst(Comparator.naturalOrder())));
+        itemListView.setItems(items.getItems());
     }
 
     public void refreshList(String currentView) {
-        items.sort(Comparator.comparingInt(Item::getItemId));
+        items.getItems().sort(Comparator.comparingInt(Item::getItemId));
         if (currentView.equals("complete")) {
             showComplete();
         } else if (currentView.equals("incomplete")) {
             showIncomplete();
-        } else itemListView.setItems(items);
-
-    }
-
-    public void clearItems() {
-        items.clear();
-        itemListView.setItems(items);
-    }
-
-    public void deleteItem(int itemId) {
-//        delete item with the item index
-        items.removeIf(item -> item.getItemId() == itemId);
-        itemListView.setItems(items);
-    }
-
-    public Optional<Item> getItemById(int itemId) {
-        return items.stream().filter(item -> item.getItemId() == itemId).findFirst();
-    }
-
-    public void editItem(int itemId, String descriptionText, LocalDate dueDate) {
-        Optional<Item> tempItem = getItemById(itemId);
-        tempItem.ifPresent(item -> {
-            if (descriptionText.trim().length() != 0) {   //only change description if textfield is not empty
-                item.setItemDescription(descriptionText);
-            }
-            if (dueDate != null)             //only change due date if datepicker is not empty
-                item.setItemDueDate(dueDate);
-
-            refresh();
-        });
-    }
-
-    public void markItem(int itemId) {
-        Optional<Item> tempItem = getItemById(itemId);
-        tempItem.ifPresent(Item::toggleItemComplete);
-        itemListView.setItems(items);
+        } else itemListView.setItems(items.getItems());
     }
 
     public void showAll() {
         currentView = "all";
-        itemListView.setItems(items);//        set listview equal to original list
+        itemListView.setItems(items.getItems());//        set listview equal to original list
     }
 
     public void showComplete() {
-        //        create new filtered list
-        FilteredList<Item> completeItems = new FilteredList<>(items, Item::isItemComplete);        //filter list to show only items marked as complete
+        //create new filtered list
+        FilteredList<Item> completeItems = new FilteredList<>(items.getItems(), Item::isItemComplete);        //filter list to show only items marked as complete
 
         currentView = "complete";
 
         //set listview equal to filtered list
         itemListView.setItems(completeItems);
-
     }
 
     public void showIncomplete() {
         //        create new filtered list
-        FilteredList<Item> incompleteItems = new FilteredList<>(items, item -> !item.isItemComplete());      //filter list to show only items marked as incomplete
+        FilteredList<Item> incompleteItems = new FilteredList<>(items.getItems(), item -> !item.isItemComplete());      //filter list to show only items marked as incomplete
 
         currentView = "incomplete";
 
@@ -299,6 +203,7 @@ public class ItemController implements Initializable {
             e.printStackTrace();
         }
     }
+
     public void loadItems() {
         //        opens filechooser
         JFileChooser fileChooser = new JFileChooser();
@@ -312,7 +217,7 @@ public class ItemController implements Initializable {
 
             //        only allow txt file to be loaded
             if (!selectedFile.getName().endsWith(".txt")) {
-                throwAlert("file");     //            throw error alert if not
+                new ErrorMap("file");     //            throw error alert if not
                 return;
             }
 
@@ -371,7 +276,7 @@ public class ItemController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        itemListView.setItems(null);    //initialize list
+        itemListView.setItems(null);    //initialize
         disableDatePicker();
     }
 

@@ -26,19 +26,28 @@ class Item {
 +toggleItemComplete()
 }
 
-class ItemController {
+class ItemControllerMethods {
 -{final}ObservableList<Item> items
++getItems(): ObservableList<Item>
++addItemHelper(String descriptionText, LocalDate dueDate)
++addItem(String descriptionText, LocalDate dueDate)
++clearItems()
++deleteItem(int itemId)
++editItem(int itemId, String descriptionText, LocalDate dueDate)
++markItem(int itemId)
++getItemById(int itemId): Optional<Item>
++checkForUnique(String descriptionText)
++validateDescriptionInput(String descriptionText)
+}
+
+class ItemController {
 -String currentView
 
 -ListView<Item> itemListView
 -TextField descriptionText
 -DatePicker dueDate
-
 -Button addItemButton
 -Button clearAllButton
-
-+getItems(): ObservableList<Item>
-+getCurrentView(): String
 
 -addItemToList(ActionEvent actionEvent)
 -clearAll(ActionEvent actionEvent)
@@ -52,18 +61,9 @@ class ItemController {
 -loadList(ActionEvent actionEvent)
 -sortItemsList(ActionEvent actionEvent)
 
-+addItem()
-+validateDescriptionInput()
-+checkForUnique()
-+throwAlert(String errorType)
 +refresh()
 +refreshList()
 +sortItems()
-+clearItems()
-+deleteItem(int itemId)
-+editItem(int itemId)
-+markItem(int itemId)
-+getItemById(int itemId): Optional<Item>
 +showAll()
 +showComplete()
 +showIncomplete()
@@ -84,12 +84,21 @@ class Error {
 +getContentText(): String
 }
 
-file scene.fxml {
+class ErrorMap {
++ErrorMap(String errorType)
 }
 
+file scene.fxml {
+}
+file styles.css {
+}
 scene.fxml o-- ItemController
+TodoListApplication o-- styles.css
 TodoListApplication o-- scene.fxml
 ItemController o-- Item
-ItemController o-- Error
+ItemController o-- ErrorMap
+ErrorMap o-- Error
+ItemController o-- ItemControllerMethods
+ItemControllerMethods o-- ErrorMap
 
 @enduml

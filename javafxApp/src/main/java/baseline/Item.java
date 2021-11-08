@@ -71,7 +71,7 @@ public class Item {
         String returnString = "";
         if (this.getItemDueDate() != null)  //display date with formatting if it exists
             returnString = this.getItemDueDate() + " | ";
-        returnString += getItemDescription() + " " + isItemComplete();
+        returnString += getItemDescription();
         return returnString;
     }
 }

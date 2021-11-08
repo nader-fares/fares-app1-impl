@@ -21,5 +21,4 @@ public class Error {
     public String getContentText() {
         return contentText;
     }
-
 }
