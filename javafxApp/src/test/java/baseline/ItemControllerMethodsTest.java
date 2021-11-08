@@ -1,7 +1,5 @@
 package baseline;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -133,5 +131,14 @@ class ItemControllerMethodsTest {
     void validateDescriptionInput() {
         assertTrue(items.validateDescriptionInput("test test 2"));  //returns true because it meets requirements
         assertFalse(items.validateDescriptionInput(""));    //returns false because it does not meet requirements
+    }
+
+    @Test
+    void verifyDate() {
+        LocalDate testDate1 = items.verifyDate("2014-12-10");   //valid format will return date
+        assertEquals(LocalDate.parse("2014-12-10"), testDate1);
+
+        LocalDate testDate2 = items.verifyDate("24-2012-10");   //invalid format will return null
+        assertNull(testDate2);
     }
 }

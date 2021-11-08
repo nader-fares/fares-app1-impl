@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="baseline.ItemControllerMethodsTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2021-11-08T02:33:43" hostname="DESKTOP-60QMB9L" time="0.028">
+<testsuite name="baseline.ItemControllerMethodsTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2021-11-08T03:38:54" hostname="DESKTOP-60QMB9L" time="0.033">
   <properties/>
-  <testcase name="checkForUnique()" classname="baseline.ItemControllerMethodsTest" time="0.016"/>
+  <testcase name="checkForUnique()" classname="baseline.ItemControllerMethodsTest" time="0.015"/>
   <testcase name="addItem()" classname="baseline.ItemControllerMethodsTest" time="0.004"/>
-  <testcase name="getItemById()" classname="baseline.ItemControllerMethodsTest" time="0.002"/>
-  <testcase name="clearItems()" classname="baseline.ItemControllerMethodsTest" time="0.001"/>
-  <testcase name="markItem()" classname="baseline.ItemControllerMethodsTest" time="0.0"/>
-  <testcase name="editItem()" classname="baseline.ItemControllerMethodsTest" time="0.0"/>
-  <testcase name="addItemHelper()" classname="baseline.ItemControllerMethodsTest" time="0.0"/>
+  <testcase name="getItemById()" classname="baseline.ItemControllerMethodsTest" time="0.006"/>
+  <testcase name="verifyDate()" classname="baseline.ItemControllerMethodsTest" time="0.001"/>
+  <testcase name="clearItems()" classname="baseline.ItemControllerMethodsTest" time="0.0"/>
+  <testcase name="markItem()" classname="baseline.ItemControllerMethodsTest" time="0.001"/>
+  <testcase name="editItem()" classname="baseline.ItemControllerMethodsTest" time="0.001"/>
+  <testcase name="addItemHelper()" classname="baseline.ItemControllerMethodsTest" time="0.001"/>
   <testcase name="deleteItem()" classname="baseline.ItemControllerMethodsTest" time="0.0"/>
   <testcase name="validateDescriptionInput()" classname="baseline.ItemControllerMethodsTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>

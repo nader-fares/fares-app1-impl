@@ -14,6 +14,7 @@ class Item {
 -{static}int count
 -{static}incrementCount()
 -initItemId()
++resetCount()
 
 +toString(): String
 +getItemDescription(): String
@@ -38,6 +39,8 @@ class ItemControllerMethods {
 +getItemById(int itemId): Optional<Item>
 +checkForUnique(String descriptionText)
 +validateDescriptionInput(String descriptionText)
++verifyDate(String currentLine): LocalDate
+
 }
 
 class ItemController {
@@ -70,8 +73,6 @@ class ItemController {
 +saveItems()
 +writeItems(File selectedFile)
 +loadItems()
-+verifyDate(String currentLine)
-+verifyDate(String currentLine): LocalDate
 
 -disableDatePicker()
 +Initialize(URL location, ResourceBundle resources)

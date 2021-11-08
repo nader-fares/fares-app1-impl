@@ -16,9 +16,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.net.URL;
-import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ItemController implements Initializable {
@@ -238,7 +236,7 @@ public class ItemController implements Initializable {
 
                         //variable to store date
                         LocalDate date;
-                        date = verifyDate(currentLine);
+                        date = items.verifyDate(currentLine);
 
                         //if line contains date display it
                         if (date != null) {
@@ -261,15 +259,7 @@ public class ItemController implements Initializable {
         }
     }
 
-    //verifies date follows format
-    public LocalDate verifyDate(String currentLine) {
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        try {
-            return LocalDate.parse(currentLine, dateFormat);    //date will be returned if date format matches pattern
-        } catch (DateTimeException e) {
-            return null;
-        }
-    }
+
 
     //blocks user from typing in datepicker textfield
     private void disableDatePicker() {

@@ -7,8 +7,11 @@ package baseline;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.time.DateTimeException;
 import java.time.LocalDate;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ItemControllerMethods {
@@ -48,12 +51,12 @@ public class ItemControllerMethods {
     }
 
     public void editItem(int itemId, String descriptionText, LocalDate dueDate) {
-
         Optional<Item> tempItem = getItemById(itemId);
         tempItem.ifPresent(item -> {
             if (descriptionText.trim().length() != 0) {   //only change description if textfield is not empty
                 if (descriptionText.trim().length() < 256) {
-                    checkForUnique(descriptionText);
+                    if (!checkForUnique(descriptionText))
+                        return;
                     item.setItemDescription(descriptionText);
                 } else new ErrorMap("description");
             }
@@ -85,5 +88,15 @@ public class ItemControllerMethods {
     public boolean validateDescriptionInput(String descriptionText) {
         String trimmedInput = descriptionText.trim();
         return trimmedInput.length() >= 1 && trimmedInput.length() <= 256;  //true if meets requirements
+    }
+
+    //verifies date follows format
+    public LocalDate verifyDate(String currentLine) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            return LocalDate.parse(currentLine, dateFormat);    //date will be returned if date format matches pattern
+        } catch (DateTimeException e) {
+            return null;
+        }
     }
 }
