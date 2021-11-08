@@ -27,10 +27,15 @@ public class ItemControllerMethods {
         items.add(new Item(descriptionText, dueDate)); //create object with description from textfield and date from date picker
     }
 
-    public void addItem(String descriptionText, LocalDate dueDate) {
-        validateDescriptionInput(descriptionText);  //check if description and date match requirements
-        checkForUnique(descriptionText);            //check if item is unique
+    public String addItem(String descriptionText, LocalDate dueDate) {
+        if (!validateDescriptionInput(descriptionText)) {   //return errortype string if unsuccessful
+            return "description";
+        }
+        if (!checkForUnique(descriptionText)) {
+            return "unique";
+        }
         addItemHelper(descriptionText, dueDate);    //add item to list
+        return null;
     }
 
     public void clearItems() {
@@ -66,22 +71,19 @@ public class ItemControllerMethods {
         return items.stream().filter(item -> item.getItemId() == itemId).findFirst();
     }
 
-    public String checkForUnique(String descriptionText) {
+    public boolean checkForUnique(String descriptionText) {
         //if item with the same description and due date already exists, throw alert and block item from being added
         for (Item item : items) {
             if (descriptionText.equals(item.getItemDescription())) {
-                new ErrorMap("unique");
+                return false;           //item already exists
             }
         }
-        return descriptionText;
+        return true;    //item is unique
     }
 
     //if item does not meet description requirements, throw alert and block item from being added
-    public String validateDescriptionInput(String descriptionText) {
+    public boolean validateDescriptionInput(String descriptionText) {
         String trimmedInput = descriptionText.trim();
-        if (trimmedInput.length() < 1 || trimmedInput.length() > 256) {
-            new ErrorMap("description");
-        }
-        return trimmedInput;
+        return trimmedInput.length() >= 1 && trimmedInput.length() <= 256;  //true if meets requirements
     }
 }

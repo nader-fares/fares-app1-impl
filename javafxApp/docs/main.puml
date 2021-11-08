@@ -99,6 +99,6 @@ ItemController o-- Item
 ItemController o-- ErrorMap
 ErrorMap o-- Error
 ItemController o-- ItemControllerMethods
-ItemControllerMethods o-- ErrorMap
+ItemControllerMethods o-- Item
 
 @enduml

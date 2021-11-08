@@ -48,7 +48,10 @@ public class ItemController implements Initializable {
     @FXML
     private void addItemToList(ActionEvent actionEvent) {
         try {
-            items.addItem(descriptionText.getText(), dueDate.getValue());
+            String errorType = items.addItem(descriptionText.getText(), dueDate.getValue());
+            if (errorType != null) {
+                new ErrorMap(errorType);
+            }
         } catch(InputMismatchException e) {
             System.out.println("Input Error");
         } finally {

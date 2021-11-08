@@ -16,8 +16,6 @@ public class Item {
 
     private static int count = 0;   //static id to ensure no two items have the same id
 
-
-
     public String getItemDescription() {
         return itemDescription;
     }
@@ -62,8 +60,12 @@ public class Item {
         this.itemId = count;
     }
 
+    public static void resetCount() {       //for testing purposes only
+        count = 0;
+    }
+
     public void toggleItemComplete() {
-        this.setItemComplete(!this.isItemComplete());
+        this.setItemComplete(!this.isItemComplete());   //testing is unnecessary as it is already tested by the mark item test
     }
     //display object as string in listview
     @Override
